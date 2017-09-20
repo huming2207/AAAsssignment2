@@ -28,6 +28,11 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         // Declare a DFS marked list and marked the initial values as false.
         boolean[][] markedList = new boolean[maze.sizeR][maze.sizeC];
 
+        for(boolean[] array : markedList)
+        {
+            Arrays.fill(array, false);
+        }
+
         // Fire the hole!
         runDfs(maze.entrance, markedList);
     }
@@ -48,7 +53,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         for(Cell currentCell : rootShell.neigh)
         {
             // Detect if it has been marked, if it does, skip to the next one
-            if(!markedList[currentCell.r - 1][currentCell.c - 1])
+            if(currentCell != null && !markedList[currentCell.r][currentCell.c])
             {
                 runDfs(currentCell, markedList);
             }
@@ -67,16 +72,19 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         // Grab a random index
         int randomIndex = ThreadLocalRandom.current().nextInt(0, cell.wall.length);
 
-        // If the wall is null, pick again.
-        if(cell.wall[randomIndex] != null)
+        for(Wall wall : cell.wall)
         {
-            // Set the wall present value to false
-            cell.wall[randomIndex].present = false;
+            if(wall != null)
+            {
+                // If the wall is null, pick again.
+                if(cell.wall[randomIndex] != null)
+                {
+                    // Set the wall present value to false
+                    cell.wall[randomIndex].present = false;
+                }
+            }
         }
-        else
-        {
-            rebuildWall(cell); // TODO: StackOverflow here!!!
-        }
+
     }
 
 
