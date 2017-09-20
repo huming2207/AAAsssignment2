@@ -29,7 +29,7 @@ public class ModifiedPrimsGenerator implements MazeGenerator
     @Override
     public void generateMaze(Maze maze)
     {
-        // TODO Auto-generated method stub
+        initPrim(maze);
 
     } // end of generateMaze()
 
@@ -42,9 +42,10 @@ public class ModifiedPrimsGenerator implements MazeGenerator
 
     /**
      *
+     * Recursively do the Prim's algorithm
      *
-     *
-     * @param rootCell
+     * @param rootCell The root cell (Cell "c" in the assignment spec)
+     * @param sizeOfMaze Size of the maze (row * column)
      */
     private void runPrim(Cell rootCell, int sizeOfMaze)
     {

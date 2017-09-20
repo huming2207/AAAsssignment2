@@ -48,7 +48,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         for(Cell currentCell : rootShell.neigh)
         {
             // Detect if it has been marked, if it does, skip to the next one
-            if(!markedList[currentCell.r][currentCell.c])
+            if(!markedList[currentCell.r - 1][currentCell.c - 1])
             {
                 runDfs(currentCell, markedList);
             }
@@ -75,7 +75,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         }
         else
         {
-            rebuildWall(cell);
+            rebuildWall(cell); // TODO: StackOverflow here!!!
         }
     }
 
