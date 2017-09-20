@@ -67,8 +67,16 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         // Grab a random index
         int randomIndex = ThreadLocalRandom.current().nextInt(0, cell.wall.length);
 
-        // Set the wall present value to false
-        cell.wall[randomIndex].present = false;
+        // If the wall is null, pick again.
+        if(cell.wall[randomIndex] != null)
+        {
+            // Set the wall present value to false
+            cell.wall[randomIndex].present = false;
+        }
+        else
+        {
+            rebuildWall(cell);
+        }
     }
 
 
