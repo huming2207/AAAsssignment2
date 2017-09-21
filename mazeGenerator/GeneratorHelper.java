@@ -37,6 +37,13 @@ public class GeneratorHelper
 
     }
 
+    /**
+     * Detect if two cells are neighbors
+     *
+     * @param cell
+     * @param neighborCell
+     * @return true if two cells are neighbors
+     */
     protected static boolean isNeighbor(Cell cell, Cell neighborCell)
     {
         if(cell == null || neighborCell == null) { return false; }

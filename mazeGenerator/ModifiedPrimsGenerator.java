@@ -1,10 +1,8 @@
 package mazeGenerator;
 
-import com.sun.tools.javah.Gen;
 import maze.Cell;
 import maze.Maze;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;

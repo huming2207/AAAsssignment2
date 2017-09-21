@@ -1,12 +1,9 @@
 package mazeGenerator;
 
-import com.sun.tools.javah.Gen;
 import maze.Cell;
 import maze.Maze;
-import maze.Wall;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,6 +19,9 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
     /**
      *
      * DFS initiator
+     *
+     * Includes:
+     *  Step 1.1: Randomly select a cell from the maze
      *
      * @param maze The maze
      */
@@ -94,6 +94,9 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
 
     /**
      * Perform DFS and traverse the whole map from a certain root cell
+     *
+     * Includes:
+     *  All other steps (Just a DFS, no need to explain...)
      *
      * @param rootCell The root cell
      * @param markedList The marked list bool array
