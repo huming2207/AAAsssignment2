@@ -18,7 +18,6 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         initDfs(maze);
     } // end of generateMaze()
 
-
     /**
      *
      * DFS initiator
@@ -72,6 +71,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
      *  Build the new wall!
      *
      * @param cell The root cell need to be rebuild the wall
+     * @param neighborCell The neighbor cell of the root cell
      */
     private void rebuildWall(Cell cell, Cell neighborCell)
     {
