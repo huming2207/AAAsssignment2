@@ -1,5 +1,6 @@
 package mazeGenerator;
 
+import com.sun.tools.javah.Gen;
 import maze.Cell;
 import maze.Maze;
 
@@ -67,7 +68,7 @@ public class ModifiedPrimsGenerator implements MazeGenerator
         {
             if(originCells.contains(cell))
             {
-                rebuildWall(cell, randomCell);
+                GeneratorHelper.rebuildWall(cell, randomCell);
 
                 // Repeat until set Z includes every cell in the maze
                 if(sizeOfMaze < originCells.size())
@@ -80,34 +81,6 @@ public class ModifiedPrimsGenerator implements MazeGenerator
     }
 
 
-    /**
-     *
-     *  Build the new wall!
-     *
-     * @param rootCell The cell need to be rebuild the wall
-     * @param neighborCell The neighbour cell
-     */
-    private void rebuildWall(Cell rootCell, Cell neighborCell)
-    {
-        // Remove the root cell's wall first...
-        for(int cellIndex = 0; cellIndex < rootCell.neigh.length; cellIndex++)
-        {
-            if(rootCell.neigh[cellIndex].r == neighborCell.r &&
-                    rootCell.neigh[cellIndex].c == neighborCell.c)
-            {
-                rootCell.wall[cellIndex].present = false;
-            }
-        }
 
-        // Then remove the neighbor cell's wall
-        for(int cellIndex = 0; cellIndex < neighborCell.neigh.length; cellIndex++)
-        {
-            if(neighborCell.neigh[cellIndex].r == rootCell.r &&
-                    neighborCell.neigh[cellIndex].c == rootCell.c)
-            {
-                neighborCell.wall[cellIndex].present = false;
-            }
-        }
-    }
 
 } // end of class ModifiedPrimsGenerator

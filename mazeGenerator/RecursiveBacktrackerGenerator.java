@@ -1,5 +1,6 @@
 package mazeGenerator;
 
+import com.sun.tools.javah.Gen;
 import maze.Cell;
 import maze.Maze;
 import maze.Wall;
@@ -27,15 +28,52 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
     private void initDfs(Maze maze)
     {
         // Declare a DFS marked list and marked the initial values as false.
-        boolean[][] markedList = new boolean[maze.sizeR][maze.sizeC];
+        boolean[][] markedList;
+
+        // Detect the maze type
+        switch(maze.type)
+        {
+            case Maze.NORMAL:
+            {
+                markedList = new boolean[maze.sizeR][maze.sizeC];
+                break;
+            }
+
+            case Maze.TUNNEL:
+            {
+                markedList = new boolean[maze.sizeR][maze.sizeC];
+                break;
+            }
+
+            case Maze.HEX:
+            {
+                markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
+                break;
+            }
+
+            default:
+            {
+                markedList = new boolean[maze.sizeR][maze.sizeC];
+                break;
+            }
+        }
 
         // Randomly pick a Cell from the maze map.
         int randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
         int randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
         Cell randomCell = maze.map[randomPosX][randomPosY];
 
-        // Fire in the hole!
-        runDfs(randomCell, markedList);
+        if(randomCell == null)
+        {
+            initDfs(maze);
+        }
+        else
+        {
+            // Fire in the hole!
+            runDfs(randomCell, markedList);
+        }
+
+
     }
 
     /**
@@ -60,37 +98,11 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
             // Detect if it has been marked, if it does, skip to the next one
             if(currentCell != null && !markedList[currentCell.r][currentCell.c])
             {
-                rebuildWall(rootCell, currentCell);
+                GeneratorHelper.rebuildWall(rootCell, currentCell);
                 runDfs(currentCell,  markedList);
             }
         }
     }
 
-    /**
-     *
-     *  Build the new wall!
-     *
-     * @param cell The root cell need to be rebuild the wall
-     * @param neighborCell The neighbor cell of the root cell
-     */
-    private void rebuildWall(Cell cell, Cell neighborCell)
-    {
-        for(int cellIndex = 0; cellIndex <= 5; cellIndex++)
-        {
-            if(neighborCell.neigh[cellIndex] != null
-                    && cell.c == neighborCell.neigh[cellIndex].c
-                    && cell.r == neighborCell.neigh[cellIndex].r)
-            {
-                neighborCell.wall[cellIndex].present = false;
-            }
 
-            if(cell.neigh[cellIndex] != null
-                    && cell.neigh[cellIndex].c == neighborCell.c
-                    && cell.neigh[cellIndex].r == neighborCell.r)
-            {
-                cell.wall[cellIndex].present = false;
-            }
-        }
-
-    }
 } // end of class RecursiveBacktrackerGenerator
