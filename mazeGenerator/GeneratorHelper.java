@@ -187,7 +187,14 @@ public class GeneratorHelper
         {
             if(index == randomNeighborCellIndex)
             {
-                return randomCell;
+                if(randomCell == null)
+                {
+                    return pickRandomCellFromSet(set);
+                }
+                else
+                {
+                    return randomCell;
+                }
             }
 
             index++;
