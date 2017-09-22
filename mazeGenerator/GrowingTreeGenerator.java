@@ -10,7 +10,8 @@ import maze.Cell;
 
 public class GrowingTreeGenerator implements MazeGenerator
 {
-    // Growing tree maze generator. As it is very general, here we implement as "usually pick the most recent cell, but occasionally pick a random cell"
+    // Growing tree maze generator. As it is very general,
+    // here we implement as "usually pick the most recent cell, but occasionally pick a random cell"
 
     double threshold = 0.1;
 
@@ -53,8 +54,20 @@ public class GrowingTreeGenerator implements MazeGenerator
         // Step 1. Put the starting cell to set Z
         setZ.add(rootCell);
 
-        //  Step 2.1 Using a particular strategy (use Prim's, randomly) select a cell b from Z
-        Cell cellB = GeneratorHelper.pickRandomCellFromSet(setZ);
+        // The random opportunity should be 10% here
+        Cell cellB;
+        boolean randomNeighbor = ThreadLocalRandom.current().nextDouble(0, 1) <= threshold;
+
+        if(randomNeighbor)
+        {
+            //  Step 2.1 Using a particular strategy (use Prim's, randomly) select a cell b from Z
+            cellB = GeneratorHelper.pickRandomCellFromSet(setZ);
+        }
+        else
+        {
+            //  Step 2.1 Using a particular strategy (use DFS, the newest) select a cell b from Z
+            cellB = GeneratorHelper.pickLastCellFromSet(setZ);
+        }
 
         // Step 2.2 If cell b has unvisited neighbouring cells, randomly select a neighbour
         ArrayList<Cell> shuffledCellList = new ArrayList<>();
@@ -83,7 +96,7 @@ public class GrowingTreeGenerator implements MazeGenerator
                 // Loop until the set Z is empty
                 while(setZ.size() > 0)
                 {
-                    // Recursion (Including add to set "Z")
+                    // Step 3. Recursion (Including add to set "Z")
                     runGrowingTree(neighborCell, markedList);
                 }
 

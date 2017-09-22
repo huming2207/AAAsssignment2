@@ -4,6 +4,7 @@ import maze.Cell;
 import maze.Maze;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GeneratorHelper
@@ -178,7 +179,7 @@ public class GeneratorHelper
      * @param set a set of cells
      * @return a random cell
      */
-    public static Cell pickRandomCellFromSet(HashSet<Cell> set)
+    protected static Cell pickRandomCellFromSet(HashSet<Cell> set)
     {
         int randomNeighborCellIndex = ThreadLocalRandom.current().nextInt(0, set.size());
         int index = 0;
@@ -201,5 +202,23 @@ public class GeneratorHelper
         }
 
         return null;
+    }
+
+    /**
+     * Pick the last cell (i.e. the latest cell) from a set
+     * @param set
+     * @return
+     */
+    protected static Cell pickLastCellFromSet(HashSet<Cell> set)
+    {
+        Cell result = null;
+        Iterator setIterator = set.iterator();
+
+        while(setIterator.hasNext())
+        {
+            result = (Cell)setIterator.next();
+        }
+
+        return result;
     }
 }
