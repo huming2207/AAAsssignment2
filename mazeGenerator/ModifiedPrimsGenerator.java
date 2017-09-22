@@ -43,60 +43,8 @@ public class ModifiedPrimsGenerator implements MazeGenerator
     private void initPrim(Maze maze)
     {
 
-        int randomPosX, randomPosY;
-
-        // Detect the maze type
-        switch(maze.type)
-        {
-            case Maze.NORMAL:
-            {
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-
-            case Maze.TUNNEL:
-            {
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-
-            case Maze.HEX:
-            {
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC + (maze.sizeR + 1) / 2);
-                break;
-            }
-
-            // Won't happen, just shut up the compiler
-            default:
-            {
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-        }
-
-        // Pick a cell with the random index from the map
-        Cell randomCell = maze.map[randomPosX][randomPosY];
-
-        if(randomCell == null)
-        {
-            initPrim(maze);
-            return;
-        }
-        else
-        {
-            // Fire in the hole!
-            runPrim(randomCell, maze.sizeC * maze.sizeR);
-        }
-
-        System.out.println("done");
-
+        // Fire in the hole!
+        runPrim(GeneratorHelper.getRandomCellFromMaze(maze), maze.sizeC * maze.sizeR);
     }
 
     /**
@@ -154,7 +102,13 @@ public class ModifiedPrimsGenerator implements MazeGenerator
         }
     }
 
-
+    /**
+     *
+     * Pick a cell randomly from a cell set
+     *
+     * @param set a set of cells
+     * @return a random cell
+     */
     private Cell pickRandomCellFromSet(HashSet<Cell> set)
     {
         int randomNeighborCellIndex = ThreadLocalRandom.current().nextInt(0, set.size());

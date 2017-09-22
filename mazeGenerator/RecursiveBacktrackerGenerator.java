@@ -28,67 +28,10 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
     private void initDfs(Maze maze)
     {
         // Declare a DFS marked list and marked the initial values as false.
-        boolean[][] markedList;
-
-        int randomPosX, randomPosY;
-
-        // Detect the maze type
-        switch(maze.type)
-        {
-            case Maze.NORMAL:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC];
-
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-
-            case Maze.TUNNEL:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC];
-
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-
-            case Maze.HEX:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
-
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC + (maze.sizeR + 1) / 2);
-                break;
-            }
-
-            // Won't happen, just shut up the compiler
-            default:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC];
-
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-        }
+        boolean[][] markedList = GeneratorHelper.getMarkedList(maze);
 
         // Pick a cell with the random index from the map
-        Cell randomCell = maze.map[randomPosX][randomPosY];
-
-        if(randomCell == null)
-        {
-            initDfs(maze);
-        }
-        else
-        {
-            // Fire in the hole!
-            runDfs(randomCell, markedList);
-        }
-
+        runDfs(GeneratorHelper.getRandomCellFromMaze(maze), markedList);
 
     }
 
