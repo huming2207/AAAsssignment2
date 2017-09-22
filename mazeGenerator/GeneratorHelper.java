@@ -3,6 +3,7 @@ package mazeGenerator;
 import maze.Cell;
 import maze.Maze;
 
+import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GeneratorHelper
@@ -168,5 +169,30 @@ public class GeneratorHelper
         }
 
         return markedList;
+    }
+
+    /**
+     *
+     * Pick a cell randomly from a cell set
+     *
+     * @param set a set of cells
+     * @return a random cell
+     */
+    public static Cell pickRandomCellFromSet(HashSet<Cell> set)
+    {
+        int randomNeighborCellIndex = ThreadLocalRandom.current().nextInt(0, set.size());
+        int index = 0;
+
+        for(Cell randomCell : set)
+        {
+            if(index == randomNeighborCellIndex)
+            {
+                return randomCell;
+            }
+
+            index++;
+        }
+
+        return null;
     }
 }

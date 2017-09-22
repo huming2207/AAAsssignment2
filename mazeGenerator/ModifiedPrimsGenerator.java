@@ -71,18 +71,22 @@ public class ModifiedPrimsGenerator implements MazeGenerator
         // Step 1.3 Add all neighbor cell of the root cell to the neighbor cell list
         Collections.addAll(setF, rootCell.neigh);
 
-        // Step 2.1 Randomly select a cell "c" from the frontier set "F" and remove from it.
-        Cell cellC = pickRandomCellFromSet(setF);
+        // Step 2.1 Randomly select a cell "c" from the frontier set "F"...
+        Cell cellC = GeneratorHelper.pickRandomCellFromSet(setF);
         while(cellC == null)
         {
-            cellC = pickRandomCellFromSet(setF);
+            cellC = GeneratorHelper.pickRandomCellFromSet(setF);
+
         }
 
+        // Step 2.1 ...and remove from it
+        setF.remove(cellC);
+
         // Step 2.2 Randomly select a cell "b" that is in Z and adjacent to the cell "c"
-        Cell cellB = pickRandomCellFromSet(setZ);
+        Cell cellB = GeneratorHelper.pickRandomCellFromSet(setZ);
         while(!GeneratorHelper.isNeighbor(cellB, cellC))
         {
-            cellB = pickRandomCellFromSet((setZ));
+            cellB = GeneratorHelper.pickRandomCellFromSet((setZ));
         }
 
         // Step 2.3 Carve a path between Cell "b" and "c"
@@ -102,28 +106,5 @@ public class ModifiedPrimsGenerator implements MazeGenerator
         }
     }
 
-    /**
-     *
-     * Pick a cell randomly from a cell set
-     *
-     * @param set a set of cells
-     * @return a random cell
-     */
-    private Cell pickRandomCellFromSet(HashSet<Cell> set)
-    {
-        int randomNeighborCellIndex = ThreadLocalRandom.current().nextInt(0, set.size());
-        int index = 0;
 
-        for(Cell randomCell : set)
-        {
-            if(index == randomNeighborCellIndex)
-            {
-                return randomCell;
-            }
-
-            index++;
-        }
-
-        return null;
-    }
 } // end of class ModifiedPrimsGenerator
