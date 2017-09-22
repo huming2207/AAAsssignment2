@@ -1,8 +1,10 @@
 package mazeGenerator;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import maze.Maze;
 import maze.Cell;
 
@@ -38,12 +40,11 @@ public class GrowingTreeGenerator implements MazeGenerator
     /**
      *
      * Includes:
-     *  Step 1. Pick a random starting cell and add it to set Z
-     *  Step 2.1 Using a particular strategy (use DFS, newest cell) select a cell b from Z
-     *  Step 2.2.1 randomly select a neighbour first!
-     *  Step 2.2.2 If cell b has unvisited neighbouring cells...
-     *  Step 2.3 ...carve a path to it, and add the selected neighbour to set Z.
-     *  Step 3 Repeat from 1 to 2.3
+     *  1. Pick a random starting cell and add it to set Z (initially Z is empty, after addition it contains just the starting cell).
+     *  2.1. Using a particular strategy (use Prim's, randomly) select a cell b from Z.
+     *  2.2. If cell b has unvisited neighbouring cells, randomly select a neighbour, carve a path to it, and add the selected neighbour to set Z.
+     *  2.3. If b has no unvisited neighbours, remove it from Z.
+     *  3. Repeat step 2 until Z is empty
      *
      * @param rootCell
      */
@@ -52,10 +53,51 @@ public class GrowingTreeGenerator implements MazeGenerator
         // Step 1. Put the starting cell to set Z
         setZ.add(rootCell);
 
+        //  Step 2.1 Using a particular strategy (use Prim's, randomly) select a cell b from Z
+        Cell cellB = GeneratorHelper.pickRandomCellFromSet(setZ);
 
+        // Step 2.2 If cell b has unvisited neighbouring cells, randomly select a neighbour
+        ArrayList<Cell> shuffledCellList = new ArrayList<>();
+        Collections.addAll(shuffledCellList, cellB.neigh);
+        Collections.shuffle(shuffledCellList);
 
+        Cell neighborCell = null;
+        int neighborIndex = 0;
+        while(neighborCell == null && neighborIndex <= 5)
+        {
+            // Condition:
+            //   1. the cell is not null;
+            //   2. the cell is not visited before
+            if(shuffledCellList.get(neighborIndex) != null
+                    && !markedList[shuffledCellList.get(neighborIndex).r][shuffledCellList.get(neighborIndex).c])
+            {
+                // Assign the neighbor cell
+                neighborCell = shuffledCellList.get(neighborIndex);
 
+                // Mark as visited
+                markedList[shuffledCellList.get(neighborIndex).r][shuffledCellList.get(neighborIndex).c] = true;
+
+                // Carve the wall
+                GeneratorHelper.rebuildWall(cellB, neighborCell);
+
+                // Loop until the set Z is empty
+                while(setZ.size() > 0)
+                {
+                    // Recursion (Including add to set "Z")
+                    runGrowingTree(neighborCell, markedList);
+                }
+
+            }
+
+            // Increase the index
+            neighborIndex++;
+        }
+
+        // Step 2.3. If b has no unvisited neighbours, remove it from Z.
+        if(neighborCell == null)
+        {
+            setZ.remove(cellB);
+        }
     }
-
 
 }

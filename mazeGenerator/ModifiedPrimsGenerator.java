@@ -73,11 +73,6 @@ public class ModifiedPrimsGenerator implements MazeGenerator
 
         // Step 2.1 Randomly select a cell "c" from the frontier set "F"...
         Cell cellC = GeneratorHelper.pickRandomCellFromSet(setF);
-        while(cellC == null)
-        {
-            cellC = GeneratorHelper.pickRandomCellFromSet(setF);
-
-        }
 
         // Step 2.1 ...and remove from it
         setF.remove(cellC);
@@ -86,7 +81,7 @@ public class ModifiedPrimsGenerator implements MazeGenerator
         Cell cellB = GeneratorHelper.pickRandomCellFromSet(setZ);
         while(!GeneratorHelper.isNeighbor(cellB, cellC))
         {
-            cellB = GeneratorHelper.pickRandomCellFromSet((setZ));
+            cellB = GeneratorHelper.pickRandomCellFromSet(setZ);
         }
 
         // Step 2.3 Carve a path between Cell "b" and "c"
