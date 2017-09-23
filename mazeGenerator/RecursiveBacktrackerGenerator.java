@@ -2,6 +2,7 @@ package mazeGenerator;
 
 import maze.Cell;
 import maze.Maze;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,26 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
 
         // Pick a cell with the random index from the map
         runDfs(GeneratorHelper.getRandomCellFromMaze(maze), markedList);
+
+        // Use the original isPerfect() method to detect if this maze is perfect
+        // The loop may happens on every
+        while(!maze.isPerfect())
+        {
+            if(maze.type != Maze.TUNNEL)
+            {
+                // Forget about the size of the tunnel, it doesn't actually take any effects lol.
+                maze.initMaze(maze.sizeR, maze.sizeC,
+                        maze.entrance.r, maze.entrance.c,
+                        maze.exit.r, maze.exit.c,
+                        new ArrayList<>(maze.sizeTunnel));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            initDfs(maze);
+        }
 
     }
 

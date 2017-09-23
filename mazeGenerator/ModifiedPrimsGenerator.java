@@ -2,7 +2,9 @@ package mazeGenerator;
 
 import maze.Cell;
 import maze.Maze;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
@@ -43,8 +45,25 @@ public class ModifiedPrimsGenerator implements MazeGenerator
     private void initPrim(Maze maze)
     {
 
-        // Fire in the hole!
-        runPrim(GeneratorHelper.getRandomCellFromMaze(maze), maze.sizeC * maze.sizeR);
+        // Use the original isPerfect() method to detect if this maze is perfect
+        // The loop may happens on every
+        while(!maze.isPerfect())
+        {
+            if(maze.type != Maze.TUNNEL)
+            {
+                // Forget about the size of the tunnel, it doesn't actually take any effects lol.
+                maze.initMaze(maze.sizeR, maze.sizeC,
+                        maze.entrance.r, maze.entrance.c,
+                        maze.exit.r, maze.exit.c,
+                        new ArrayList<>(maze.sizeTunnel));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            initPrim(maze);
+        }
     }
 
     /**

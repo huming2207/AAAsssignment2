@@ -1,12 +1,11 @@
 package mazeGenerator;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import maze.Maze;
 import maze.Cell;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class GrowingTreeGenerator implements MazeGenerator
 {
@@ -34,8 +33,27 @@ public class GrowingTreeGenerator implements MazeGenerator
         // Declare a DFS marked list and marked the initial values as false.
         boolean[][] markedList = GeneratorHelper.getMarkedList(maze);
 
-        // Fire in the hole!
-        runGrowingTree(maze, GeneratorHelper.getRandomCellFromMaze(maze), markedList);
+        runGrowingTree(GeneratorHelper.getRandomCellFromMaze(maze),markedList);
+
+        // Use the original isPerfect() method to detect if this maze is perfect
+        // The loop may happens on every
+        while(!maze.isPerfect())
+        {
+            if(maze.type != Maze.TUNNEL)
+            {
+                // Forget about the size of the tunnel, it doesn't actually take any effects lol.
+                maze.initMaze(maze.sizeR, maze.sizeC,
+                        maze.entrance.r, maze.entrance.c,
+                        maze.exit.r, maze.exit.c,
+                        new ArrayList<>(maze.sizeTunnel));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            initGrowingTree(maze);
+        }
     }
 
     /**
@@ -49,7 +67,7 @@ public class GrowingTreeGenerator implements MazeGenerator
      *
      * @param rootCell
      */
-    private void runGrowingTree(Maze maze, Cell rootCell, boolean[][] markedList)
+    private void runGrowingTree(Cell rootCell, boolean[][] markedList)
     {
         // Step 1. Put the starting cell to set Z
         setZ.add(rootCell);
@@ -90,12 +108,6 @@ public class GrowingTreeGenerator implements MazeGenerator
                 // Assign the neighbor cell
                 neighborCell = shuffledCellList.get(neighborIndex);
 
-                // If there will be a loop, try another neighbor
-                while(GeneratorHelper.isLoop(maze, cellB, neighborCell))
-                {
-                    neighborCell = shuffledCellList.get(neighborIndex);
-                }
-
                 // Mark as visited
                 markedList[shuffledCellList.get(neighborIndex).r][shuffledCellList.get(neighborIndex).c] = true;
 
@@ -106,7 +118,7 @@ public class GrowingTreeGenerator implements MazeGenerator
                 while(setZ.size() > 0)
                 {
                     // Step 3. Recursion (Including add to set "Z")
-                    runGrowingTree(maze, neighborCell, markedList);
+                    runGrowingTree(neighborCell, markedList);
                 }
 
             }
