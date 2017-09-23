@@ -2,6 +2,7 @@ package mazeGenerator;
 
 import maze.Cell;
 import maze.Maze;
+import maze.Wall;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -251,11 +252,18 @@ public class GeneratorHelper
             // Pop a cell from the queue
             Cell currentCell = cellQueue.poll();
 
-            for(Cell cell : currentCell.neigh)
+            // We cannot use the enhanced for-loop here (i.e. "for(Cell cell : currentCell.neigh)")
+            // as we need to find out which wall hasn't been broken
+            for(int cellIndex = 0; cellIndex <= 5; cellIndex++)
             {
-                if(cell == null) { continue; } // skip null cells
+                // Declare the wall and the cell
+                Cell cell = currentCell.neigh[cellIndex];
+                Wall wall = currentCell.wall[cellIndex];
 
-                if( !markedList[cell.r][cell.c])
+                if(cell == null) { continue; } // skip null cells
+                if(wall.present) { continue; } // skip blocked cells
+
+                if(!markedList[cell.r][cell.c])
                 {
                     // Mark the cell
                     markedList[cell.r][cell.c] = true;

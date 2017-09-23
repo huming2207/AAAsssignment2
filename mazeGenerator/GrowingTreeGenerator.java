@@ -35,28 +35,31 @@ public class GrowingTreeGenerator implements MazeGenerator
         boolean[][] markedList = GeneratorHelper.getMarkedList(maze);
 
         // Fire in the hole!
-        runGrowingTree(GeneratorHelper.getRandomCellFromMaze(maze), markedList);
+        runGrowingTree(maze, GeneratorHelper.getRandomCellFromMaze(maze), markedList);
     }
 
     /**
      *
      * Includes:
      *  1. Pick a random starting cell and add it to set Z (initially Z is empty, after addition it contains just the starting cell).
-     *  2.1. Using a particular strategy (use Prim's, randomly) select a cell b from Z.
+     *  2.1. Using a particular strategy to select a cell b from Z.
      *  2.2. If cell b has unvisited neighbouring cells, randomly select a neighbour, carve a path to it, and add the selected neighbour to set Z.
      *  2.3. If b has no unvisited neighbours, remove it from Z.
      *  3. Repeat step 2 until Z is empty
      *
      * @param rootCell
      */
-    private void runGrowingTree(Cell rootCell, boolean[][] markedList)
+    private void runGrowingTree(Maze maze, Cell rootCell, boolean[][] markedList)
     {
         // Step 1. Put the starting cell to set Z
         setZ.add(rootCell);
 
         // The random opportunity should be 10% here
         Cell cellB;
-        boolean randomNeighbor = ThreadLocalRandom.current().nextDouble(0, 1) <= threshold;
+        boolean randomNeighbor = ThreadLocalRandom
+                                    .current()
+                                    .nextDouble(0, 1)
+                                    <= threshold;
 
         if(randomNeighbor)
         {
@@ -87,6 +90,12 @@ public class GrowingTreeGenerator implements MazeGenerator
                 // Assign the neighbor cell
                 neighborCell = shuffledCellList.get(neighborIndex);
 
+                // If there will be a loop, try another neighbor
+                while(GeneratorHelper.isLoop(maze, cellB, neighborCell))
+                {
+                    neighborCell = shuffledCellList.get(neighborIndex);
+                }
+
                 // Mark as visited
                 markedList[shuffledCellList.get(neighborIndex).r][shuffledCellList.get(neighborIndex).c] = true;
 
@@ -97,7 +106,7 @@ public class GrowingTreeGenerator implements MazeGenerator
                 while(setZ.size() > 0)
                 {
                     // Step 3. Recursion (Including add to set "Z")
-                    runGrowingTree(neighborCell, markedList);
+                    runGrowingTree(maze, neighborCell, markedList);
                 }
 
             }
