@@ -227,7 +227,10 @@ public class GeneratorHelper
 
 
     /**
-     * Run BFS to gather all the tunnels and put it back to the maze.
+     * Run BFS to gather all the tunnels and put it back to the maze:
+     *  Step 1. Run BFS traverse
+     *  Step 2. When a non-null, not marked tunnel
+     *
      *
      * @param maze
      * @return
@@ -239,6 +242,7 @@ public class GeneratorHelper
         LinkedList<Cell> cellQueue = new LinkedList<>();
         ArrayList<int[]> tunnelPositionList = new ArrayList<>();
         boolean[][] markedList = new boolean[maze.sizeR][((maze.sizeC + 1) / 2) + maze.sizeC];
+        boolean[][] markedTunnelList = new boolean[maze.sizeR][((maze.sizeC + 1) / 2) + maze.sizeC];
 
         cellQueue.add(baseCell);
 
@@ -263,8 +267,13 @@ public class GeneratorHelper
                     cellQueue.add(cell);
 
                     // If this cell has a tunnel, mark it.
-                    if(cell.tunnelTo != null)
+                    if(cell.tunnelTo != null
+                            && !markedTunnelList[cell.r][cell.c])
                     {
+                        // Mark the tunnel, so only one tunnel will be marked (in one direction)
+                        markedTunnelList[cell.tunnelTo.r][cell.tunnelTo.c] = true;
+
+                        // Add it to the list
                         tunnelPositionList.add(new int[]{
                                 cell.r,
                                 cell.c,
