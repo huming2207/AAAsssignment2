@@ -5,6 +5,7 @@ import maze.Maze;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GeneratorHelper
@@ -221,4 +222,60 @@ public class GeneratorHelper
 
         return result;
     }
+
+    /**
+     *
+     * Perform a BFS traverse:
+     * Find if there exist a cell is the same as the base cell
+     * If it does, then a loop will happen.
+     *
+     * Run this test before break the wall to prevent a loop.
+     *
+     * @param baseCell The base cell
+     * @param neighborCell The base cell's neighbor cell
+     * @return
+     */
+    protected static boolean isLoop(Maze maze, Cell baseCell, Cell neighborCell)
+    {
+        LinkedList<Cell> cellQueue = new LinkedList<>();
+        boolean[][] markedList = new boolean[maze.sizeR][((maze.sizeC + 1) / 2) + maze.sizeC];
+
+        markedList[neighborCell.r][neighborCell.c] = true;
+        cellQueue.add(neighborCell);
+
+        // Also need to "blacklist" the base cell (otherwise it always return true)
+        markedList[baseCell.r][baseCell.c] = true;
+
+        while(!cellQueue.isEmpty())
+        {
+            // Pop a cell from the queue
+            Cell currentCell = cellQueue.poll();
+
+            for(Cell cell : currentCell.neigh)
+            {
+                if(cell == null) { continue; } // skip null cells
+
+                if( !markedList[cell.r][cell.c])
+                {
+                    // Mark the cell
+                    markedList[cell.r][cell.c] = true;
+
+                    // Detect if this cell matches the base cell
+                    if(baseCell.c == cell.c && baseCell.r == cell.r)
+                    {
+                        return true;
+                    }
+
+                    // Add to queue
+                    cellQueue.add(cell);
+
+                }
+            }
+        }
+
+        // If it cannot find any loop, return false.
+        return false;
+    }
+
+
 }
