@@ -36,7 +36,7 @@ public class GrowingTreeGenerator implements MazeGenerator
         runGrowingTree(GeneratorHelper.getRandomCellFromMaze(maze),markedList);
 
         // Use the original isPerfect() method to detect if this maze is perfect
-        // The loop may happens on every
+        // The loop may happens with ~10% possibility
         while(!maze.isPerfect())
         {
             if(maze.type != Maze.TUNNEL)
@@ -49,7 +49,12 @@ public class GrowingTreeGenerator implements MazeGenerator
             }
             else
             {
-                throw new NotImplementedException();
+                // If it's a maze, do a collection for the tunnels of the original maze.
+                ArrayList<int[]> tunnelList = GeneratorHelper.collectAllTunnelPositions(maze);
+                maze.initMaze(maze.sizeR, maze.sizeC,
+                        maze.entrance.r, maze.entrance.c,
+                        maze.exit.r, maze.exit.c,
+                        tunnelList);
             }
 
             initGrowingTree(maze);

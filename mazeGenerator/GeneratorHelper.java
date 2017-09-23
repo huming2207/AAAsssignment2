@@ -4,6 +4,7 @@ import maze.Cell;
 import maze.Maze;
 import maze.Wall;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -222,6 +223,61 @@ public class GeneratorHelper
         }
 
         return result;
+    }
+
+
+    /**
+     * Run BFS to gather all the tunnels and put it back to the maze.
+     *
+     * @param maze
+     * @return
+     */
+    protected static ArrayList<int[]> collectAllTunnelPositions(Maze maze)
+    {
+        // Declare something
+        Cell baseCell = maze.entrance;
+        LinkedList<Cell> cellQueue = new LinkedList<>();
+        ArrayList<int[]> tunnelPositionList = new ArrayList<>();
+        boolean[][] markedList = new boolean[maze.sizeR][((maze.sizeC + 1) / 2) + maze.sizeC];
+
+        cellQueue.add(baseCell);
+
+        // Also need to "blacklist" the base cell (otherwise it always return true)
+        markedList[baseCell.r][baseCell.c] = true;
+
+        while(!cellQueue.isEmpty())
+        {
+            // Pop a cell from the queue
+            Cell currentCell = cellQueue.poll();
+
+            for(Cell cell : currentCell.neigh)
+            {
+                if(cell == null) { continue; } // skip null cells
+
+                if(!markedList[cell.r][cell.c])
+                {
+                    // Mark the cell
+                    markedList[cell.r][cell.c] = true;
+
+                    // Add to queue
+                    cellQueue.add(cell);
+
+                    // If this cell has a tunnel, mark it.
+                    if(cell.tunnelTo != null)
+                    {
+                        tunnelPositionList.add(new int[]{
+                                cell.r,
+                                cell.c,
+                                cell.tunnelTo.r,
+                                cell.tunnelTo.c
+                        });
+                    }
+                }
+            }
+        }
+
+        return tunnelPositionList;
+
     }
 
 
