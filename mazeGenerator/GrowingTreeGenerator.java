@@ -37,25 +37,15 @@ public class GrowingTreeGenerator implements MazeGenerator
 
         // Use the original isPerfect() method to detect if this maze is perfect
         // The loop may happens with ~10% possibility
+        //
+        // Based on Section 3, there is no tunnel maze in GrowingTree generator
         while(!maze.isPerfect())
         {
-            if(maze.type != Maze.TUNNEL)
-            {
-                // Forget about the size of the tunnel, it doesn't actually take any effects lol.
-                maze.initMaze(maze.sizeR, maze.sizeC,
-                        maze.entrance.r, maze.entrance.c,
-                        maze.exit.r, maze.exit.c,
-                        new ArrayList<>(maze.sizeTunnel));
-            }
-            else
-            {
-                // If it's a maze, do a collection for the tunnels of the original maze.
-                ArrayList<int[]> tunnelList = GeneratorHelper.collectAllTunnelPositions(maze);
-                maze.initMaze(maze.sizeR, maze.sizeC,
-                        maze.entrance.r, maze.entrance.c,
-                        maze.exit.r, maze.exit.c,
-                        tunnelList);
-            }
+            // Forget about the size of the tunnel, it doesn't actually take any effects lol.
+            maze.initMaze(maze.sizeR, maze.sizeC,
+                    maze.entrance.r, maze.entrance.c,
+                    maze.exit.r, maze.exit.c,
+                    new ArrayList<>(maze.sizeTunnel));
 
             initGrowingTree(maze);
         }
