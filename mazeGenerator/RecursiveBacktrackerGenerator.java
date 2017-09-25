@@ -28,6 +28,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
      */
     private void initDfs(Maze maze)
     {
+
         // Declare a DFS marked list and marked the initial values as false.
         boolean[][] markedList = GeneratorHelper.getMarkedList(maze);
 
@@ -38,6 +39,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
         // The loop may happens with ~10% possibility
         while(!maze.isPerfect())
         {
+            System.out.println("[WARNING] Looks like it's not perfect, gonna retry lol");
             if(maze.type != Maze.TUNNEL)
             {
                 // Forget about the size of the tunnel, it doesn't actually take any effects lol.
@@ -59,6 +61,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
             initDfs(maze);
         }
 
+
     }
 
     /**
@@ -77,7 +80,8 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
 
         // Randomize the cells
         ArrayList<Cell> shuffledCell = new ArrayList<>();
-        Collections.addAll(shuffledCell, rootCell.neigh.clone());
+        Collections.addAll(shuffledCell, rootCell.neigh);
+
         Collections.shuffle(shuffledCell);
 
         // Iterate the neighbor shell
@@ -87,6 +91,14 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
             if(currentCell != null && !markedList[currentCell.r][currentCell.c])
             {
                 GeneratorHelper.rebuildWall(rootCell, currentCell);
+
+                // "Blacklist" the tunnel exit cell to prevent a loop
+                // Sounds ironic, but it works.
+                if(currentCell.tunnelTo != null)
+                {
+                    markedList[currentCell.tunnelTo.r][currentCell.tunnelTo.c] = true;
+                }
+
                 runDfs(currentCell,  markedList);
             }
         }
