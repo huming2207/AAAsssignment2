@@ -48,6 +48,8 @@ public class ModifiedPrimsGenerator implements MazeGenerator
         // The loop may happens with ~10% possibility
         //
         // Based on Section 3, there is no tunnel maze in Prim's generator
+        runPrim(maze.entrance, maze.sizeR * maze.sizeC);
+
         while(!maze.isPerfect())
         {
             // Forget about the size of the tunnel, it doesn't actually take any effects lol.
