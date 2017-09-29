@@ -1,6 +1,11 @@
 package mazeSolver;
 
+import maze.Cell;
 import maze.Maze;
+import maze.Wall;
+
+import java.util.ArrayList;
+
 
 /**
  * Implements WallFollowerSolver
@@ -8,6 +13,18 @@ import maze.Maze;
 
 public class WallFollowerSolver implements MazeSolver
 {
+    private ArrayList<Cell> cellList;
+    private boolean[][] markedList;
+
+    public WallFollowerSolver()
+    {
+        cellList = new ArrayList<>();
+    }
+
+    private void followWall(Maze maze, Cell nextCell)
+    {
+
+    }
 
     @Override
     public void solveMaze(Maze maze)
