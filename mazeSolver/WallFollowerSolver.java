@@ -2,9 +2,8 @@ package mazeSolver;
 
 import maze.Cell;
 import maze.Maze;
-import maze.Wall;
 
-import java.util.ArrayList;
+import java.util.Stack;
 
 
 /**
@@ -13,14 +12,14 @@ import java.util.ArrayList;
 
 public class WallFollowerSolver implements MazeSolver
 {
-    private ArrayList<Cell> cellList;
+    private Stack<Cell> cellStack;
     private boolean[][] markedList;
 
     private boolean solveStatus;
 
     public WallFollowerSolver()
     {
-        cellList = new ArrayList<>();
+        cellStack = new Stack<>();
         solveStatus = false;
     }
 
@@ -30,7 +29,16 @@ public class WallFollowerSolver implements MazeSolver
         markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
 
         // Start to follow the wall
-        followWall(maze, maze.entrance);
+        // To make my life easier, I've used a exception to force the wall follower stop when it hits the exit.
+        try
+        {
+            followWall(maze, maze.entrance);
+        }
+        catch (TraverseHitExitException traverseHitExitException)
+        {
+            solveStatus = true;
+        }
+
 
     }
 
@@ -41,52 +49,46 @@ public class WallFollowerSolver implements MazeSolver
      * @param maze
      * @param nextCell
      */
-    private void followWall(Maze maze, Cell nextCell)
+    private void followWall(Maze maze, Cell nextCell) throws TraverseHitExitException
     {
-        // If the next cell is the exit, it's already solved.
+        markedList[nextCell.r][nextCell.c] = true;
+        maze.drawFtPrt(nextCell);
+
         if(nextCell.r == maze.exit.r && nextCell.c == maze.exit.c)
         {
-            solveStatus = true;
-            markedList[nextCell.r][nextCell.c] = true;
-            maze.drawFtPrt(nextCell);
-            return;
+            throw new TraverseHitExitException();
         }
-        else
+
+        // Always try turn east first, if it can't, try north and south, then west.
+        if(shouldTurn(nextCell, Maze.EAST))
         {
-            markedList[nextCell.r][nextCell.c] = true;
-            maze.drawFtPrt(nextCell);
-
-            if(shouldTurn(nextCell, Maze.EAST))
-            {
-                followWall(maze, nextCell.neigh[Maze.EAST]);
-            }
-
-            if(shouldTurn(nextCell, Maze.NORTH))
-            {
-                followWall(maze, nextCell.neigh[Maze.NORTH]);
-            }
-
-            if(shouldTurn(nextCell, Maze.SOUTH))
-            {
-                followWall(maze, nextCell.neigh[Maze.SOUTH]);
-            }
-
-            if(shouldTurn(nextCell, Maze.NORTHEAST))
-            {
-                followWall(maze, nextCell.neigh[Maze.NORTHEAST]);
-            }
-
-            if(shouldTurn(nextCell, Maze.SOUTHWEST))
-            {
-                followWall(maze, nextCell.neigh[Maze.SOUTHWEST]);
-            }
-
-            if(shouldTurn(nextCell, Maze.WEST))
-            {
-                followWall(maze, nextCell.neigh[Maze.WEST]);
-            }
+            followWall(maze, nextCell.neigh[Maze.EAST]);
         }
 
+        if(shouldTurn(nextCell, Maze.NORTH))
+        {
+            followWall(maze, nextCell.neigh[Maze.NORTH]);
+        }
+
+        if(shouldTurn(nextCell, Maze.SOUTH))
+        {
+            followWall(maze, nextCell.neigh[Maze.SOUTH]);
+        }
+
+        if(shouldTurn(nextCell, Maze.NORTHEAST))
+        {
+            followWall(maze, nextCell.neigh[Maze.NORTHEAST]);
+        }
+
+        if(shouldTurn(nextCell, Maze.SOUTHWEST))
+        {
+            followWall(maze, nextCell.neigh[Maze.SOUTHWEST]);
+        }
+
+        if(shouldTurn(nextCell, Maze.WEST))
+        {
+            followWall(maze, nextCell.neigh[Maze.WEST]);
+        }
 
 
     }
