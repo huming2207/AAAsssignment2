@@ -1,5 +1,6 @@
 package mazeSolver;
 
+import maze.Cell;
 import maze.Maze;
 
 /**
@@ -7,6 +8,21 @@ import maze.Maze;
  */
 public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
 {
+    public BiDirectionalRecursiveBacktrackerSolver()
+    {
+
+    }
+
+    private void initBiDfs(Maze maze)
+    {
+
+    }
+
+    private void runBiDfs(Maze maze, Cell nextStartCell, Cell nextEndCell)
+    {
+
+    }
+
 
     @Override
     public void solveMaze(Maze maze)

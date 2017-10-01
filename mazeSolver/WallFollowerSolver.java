@@ -12,15 +12,15 @@ import java.util.Stack;
 
 public class WallFollowerSolver implements MazeSolver
 {
-    private Stack<Cell> cellStack;
     private boolean[][] markedList;
+    private int exploreCounter;
 
     private boolean solveStatus;
 
     public WallFollowerSolver()
     {
-        cellStack = new Stack<>();
         solveStatus = false;
+        exploreCounter = 0;
     }
 
     private void initWallFollower(Maze maze)
@@ -52,6 +52,7 @@ public class WallFollowerSolver implements MazeSolver
     private void followWall(Maze maze, Cell nextCell) throws TraverseHitExitException
     {
         markedList[nextCell.r][nextCell.c] = true;
+        exploreCounter++;
         maze.drawFtPrt(nextCell);
 
         if(nextCell.r == maze.exit.r && nextCell.c == maze.exit.c)
@@ -59,35 +60,46 @@ public class WallFollowerSolver implements MazeSolver
             throw new TraverseHitExitException();
         }
 
-        // Always try turn east first, if it can't, try north and south, then west.
-        if(shouldTurn(nextCell, Maze.EAST))
+        // Test the tunnel first
+        // If the tunnel exit is wrapped by all four walls, skip it.
+        if(nextCell.tunnelTo != null
+                && !markedList[nextCell.tunnelTo.r][nextCell.tunnelTo.c]
+                && !SolveHelper.isWrappedByWall(nextCell.tunnelTo))
         {
-            followWall(maze, nextCell.neigh[Maze.EAST]);
+            followWall(maze, nextCell.tunnelTo);
         }
-
-        if(shouldTurn(nextCell, Maze.NORTH))
+        else
         {
-            followWall(maze, nextCell.neigh[Maze.NORTH]);
-        }
+            // Always try turn east first, if it can't, try north and south, then west.
+            if(shouldTurn(nextCell, Maze.EAST))
+            {
+                followWall(maze, nextCell.neigh[Maze.EAST]);
+            }
 
-        if(shouldTurn(nextCell, Maze.SOUTH))
-        {
-            followWall(maze, nextCell.neigh[Maze.SOUTH]);
-        }
+            if(shouldTurn(nextCell, Maze.NORTH))
+            {
+                followWall(maze, nextCell.neigh[Maze.NORTH]);
+            }
 
-        if(shouldTurn(nextCell, Maze.NORTHEAST))
-        {
-            followWall(maze, nextCell.neigh[Maze.NORTHEAST]);
-        }
+            if(shouldTurn(nextCell, Maze.SOUTH))
+            {
+                followWall(maze, nextCell.neigh[Maze.SOUTH]);
+            }
 
-        if(shouldTurn(nextCell, Maze.SOUTHWEST))
-        {
-            followWall(maze, nextCell.neigh[Maze.SOUTHWEST]);
-        }
+            if(shouldTurn(nextCell, Maze.NORTHEAST))
+            {
+                followWall(maze, nextCell.neigh[Maze.NORTHEAST]);
+            }
 
-        if(shouldTurn(nextCell, Maze.WEST))
-        {
-            followWall(maze, nextCell.neigh[Maze.WEST]);
+            if(shouldTurn(nextCell, Maze.SOUTHWEST))
+            {
+                followWall(maze, nextCell.neigh[Maze.SOUTHWEST]);
+            }
+
+            if(shouldTurn(nextCell, Maze.WEST))
+            {
+                followWall(maze, nextCell.neigh[Maze.WEST]);
+            }
         }
 
 
@@ -135,8 +147,7 @@ public class WallFollowerSolver implements MazeSolver
     @Override
     public int cellsExplored()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return exploreCounter;
     } // end of cellsExplored()
 
 } // end of class WallFollowerSolver
