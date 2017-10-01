@@ -27,6 +27,7 @@ public class GeneratorHelper
     {
         for(int cellIndex = 0; cellIndex <= 5; cellIndex++)
         {
+            // Trap for young players: do not compare the cells directly (that's the reference)
             if(neighborCell.neigh[cellIndex] != null
                     && cell.c == neighborCell.neigh[cellIndex].c
                     && cell.r == neighborCell.neigh[cellIndex].r)
@@ -133,45 +134,6 @@ public class GeneratorHelper
             return randomCell;
         }
 
-    }
-
-    protected static boolean[][] getMarkedList(Maze maze)
-    {
-        // Declare a DFS marked list and marked the initial values as false.
-        boolean[][] markedList;
-
-        int randomPosX, randomPosY;
-
-        // Detect the maze type
-        switch(maze.type)
-        {
-            case Maze.NORMAL:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC];
-                break;
-            }
-
-            case Maze.TUNNEL:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC];
-                break;
-            }
-
-            case Maze.HEX:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
-                break;
-            }
-
-            // Won't happen, just shut up the compiler
-            default:
-            {
-                markedList = new boolean[maze.sizeR][maze.sizeC];
-                break;
-            }
-        }
-
-        return markedList;
     }
 
     /**

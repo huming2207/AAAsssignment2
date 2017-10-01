@@ -20,11 +20,24 @@ public class SolveHelper
         return false;
     }
 
+    /**
+     *
+     * Detect if a certain traverse method can go to another neighbor cell from a certain cell.
+     * The condition must be:
+     *  1. Both cells and the walls between them are not null
+     *  2. The position matches
+     *  3. The wall does not present
+     *
+     * @param cell
+     * @param neighborCell
+     * @return
+     */
     protected static boolean canGoThru(Cell cell, Cell neighborCell)
     {
         for(int cellIndex = 0; cellIndex < Maze.NUM_DIR; cellIndex++)
         {
-            if(cell.neigh[cellIndex] != null
+            if(cell != null
+                    && cell.neigh[cellIndex] != null
                     && neighborCell != null
                     && cell.wall[cellIndex] != null
                     && cell.neigh[cellIndex].r == neighborCell.r

@@ -30,7 +30,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
     {
 
         // Declare a DFS marked list and marked the initial values as false.
-        boolean[][] markedList = GeneratorHelper.getMarkedList(maze);
+        boolean[][] markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
 
         // Pick a cell with the random index from the map
         runDfs(GeneratorHelper.getRandomCellFromMaze(maze), markedList);
