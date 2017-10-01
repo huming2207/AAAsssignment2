@@ -3,9 +3,6 @@ package mazeSolver;
 import maze.Cell;
 import maze.Maze;
 
-import java.util.Stack;
-
-
 /**
  * Implements WallFollowerSolver
  */
