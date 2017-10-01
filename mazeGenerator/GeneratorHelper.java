@@ -25,7 +25,6 @@ public class GeneratorHelper
      */
     protected static void rebuildWall(Cell cell, Cell neighborCell)
     {
-
         for(int cellIndex = 0; cellIndex <= 5; cellIndex++)
         {
             if(neighborCell.neigh[cellIndex] != null
