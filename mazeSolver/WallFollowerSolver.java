@@ -67,7 +67,7 @@ public class WallFollowerSolver implements MazeSolver
         }
         else
         {
-            // Always try turn east first, if it can't, try north and south, then west.
+            // Always try turn east first
             if(shouldTurn(nextCell, Maze.EAST))
             {
                 followWall(maze, nextCell.neigh[Maze.EAST]);
@@ -78,14 +78,21 @@ public class WallFollowerSolver implements MazeSolver
                 followWall(maze, nextCell.neigh[Maze.NORTH]);
             }
 
-            if(shouldTurn(nextCell, Maze.SOUTH))
-            {
-                followWall(maze, nextCell.neigh[Maze.SOUTH]);
-            }
 
             if(shouldTurn(nextCell, Maze.NORTHEAST))
             {
                 followWall(maze, nextCell.neigh[Maze.NORTHEAST]);
+            }
+
+
+            if(shouldTurn(nextCell, Maze.WEST))
+            {
+                followWall(maze, nextCell.neigh[Maze.WEST]);
+            }
+
+            if(shouldTurn(nextCell, Maze.SOUTH))
+            {
+                followWall(maze, nextCell.neigh[Maze.SOUTH]);
             }
 
             if(shouldTurn(nextCell, Maze.SOUTHWEST))
@@ -93,10 +100,6 @@ public class WallFollowerSolver implements MazeSolver
                 followWall(maze, nextCell.neigh[Maze.SOUTHWEST]);
             }
 
-            if(shouldTurn(nextCell, Maze.WEST))
-            {
-                followWall(maze, nextCell.neigh[Maze.WEST]);
-            }
         }
 
 
