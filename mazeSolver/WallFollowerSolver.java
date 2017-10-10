@@ -124,10 +124,7 @@ public class WallFollowerSolver implements MazeSolver
      */
     private boolean shouldTurn(Cell nextCell, int directionType)
     {
-        return (nextCell.wall[directionType] != null
-                && !nextCell.wall[directionType].present
-                && nextCell.neigh[directionType] != null
-                && !markedList[nextCell.neigh[directionType].r][nextCell.neigh[directionType].c]);
+        return SolveHelper.canGoThru(nextCell, nextCell.neigh[directionType]);
     }
 
     @Override
