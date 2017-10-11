@@ -3,6 +3,8 @@ package mazeSolver;
 import maze.Cell;
 import maze.Maze;
 
+import java.util.Stack;
+
 /**
  * Implements WallFollowerSolver
  */
@@ -10,13 +12,16 @@ import maze.Maze;
 public class WallFollowerSolver implements MazeSolver
 {
     private boolean[][] markedList;
+    private Stack<Cell> rightStack;
     private int exploreCounter;
+    private DirectionHelper directionHelper;
 
     private boolean solveStatus;
 
     public WallFollowerSolver()
     {
         solveStatus = false;
+        rightStack = new Stack<>();
         exploreCounter = 0;
     }
 
@@ -24,6 +29,9 @@ public class WallFollowerSolver implements MazeSolver
     {
         // Initialize the list, set all to false
         markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
+
+        // Initialize the direction helper
+        directionHelper = new DirectionHelper(maze.type == Maze.HEX);
 
         // Start to follow the wall
         // To make my life easier, I've used a exception to force the wall follower stop when it hits the exit.
@@ -35,8 +43,6 @@ public class WallFollowerSolver implements MazeSolver
         {
             solveStatus = true;
         }
-
-
     }
 
     /**
@@ -48,86 +54,60 @@ public class WallFollowerSolver implements MazeSolver
      */
     private void followWall(Maze maze, Cell nextCell) throws TraverseHitExitException
     {
+        // Init, add the first cell to the stack
+        rightStack.push(nextCell);
         markedList[nextCell.r][nextCell.c] = true;
-        exploreCounter++;
         maze.drawFtPrt(nextCell);
 
-        if(nextCell.r == maze.exit.r && nextCell.c == maze.exit.c)
+        while(!rightStack.isEmpty())
         {
-            throw new TraverseHitExitException();
+            // Grab a cell out
+            Cell nextRightCell = rightStack.pop();
+
+            if(nextRightCell.r == maze.exit.r && nextRightCell.c == maze.exit.c)
+            {
+                throw new TraverseHitExitException();
+            }
+
+            // follow the right wall
+            stackPusher(maze, nextRightCell, rightStack);
         }
-
-        // Test the tunnel first
-        // If the tunnel exit is wrapped by all four walls, skip it.
-        if(nextCell.tunnelTo != null
-                && !markedList[nextCell.tunnelTo.r][nextCell.tunnelTo.c]
-                && !SolveHelper.isWrappedByWall(nextCell.tunnelTo))
-        {
-            followWall(maze, nextCell.tunnelTo);
-        }
-        else
-        {
-            // Always try turn east first
-            if(shouldTurn(nextCell, Maze.EAST))
-            {
-                followWall(maze, nextCell.neigh[Maze.EAST]);
-            }
-
-            if(shouldTurn(nextCell, Maze.NORTH))
-            {
-                followWall(maze, nextCell.neigh[Maze.NORTH]);
-            }
-
-
-            if(shouldTurn(nextCell, Maze.NORTHEAST))
-            {
-                followWall(maze, nextCell.neigh[Maze.NORTHEAST]);
-            }
-
-
-            if(shouldTurn(nextCell, Maze.WEST))
-            {
-                followWall(maze, nextCell.neigh[Maze.WEST]);
-            }
-
-            if(shouldTurn(nextCell, Maze.SOUTH))
-            {
-                followWall(maze, nextCell.neigh[Maze.SOUTH]);
-            }
-
-            if(shouldTurn(nextCell, Maze.SOUTHWEST))
-            {
-                followWall(maze, nextCell.neigh[Maze.SOUTHWEST]);
-            }
-
-        }
-
-
     }
 
-    /**
-     *
-     * Detect if it should turn to a specific direction
-     *
-     * Condition:
-     *  1. Wall is not null (for normal maze cell, only #0, #2, #3 and #5 are not null)
-     *  2. Wall doesn't present (has been torn down)
-     *  3. The neighbor is not null
-     *  4. Wasn't marked
-     *
-     * Btw, I REALLY DON'T KNOW WHY USE int INSTEAD OF enum FOR DIRECTION???????
-     * If enum was used, I would use iterator instead of a brunch of if-else and this method...
-     *
-     * @param nextCell
-     * @param directionType
-     * @return
-     */
-    private boolean shouldTurn(Cell nextCell, int directionType)
+    private void stackPusher(Maze maze, Cell cell, Stack<Cell> stack)
     {
-        return (nextCell.wall[directionType] != null
-                && !nextCell.wall[directionType].present
-                && nextCell.neigh[directionType] != null
-                && !markedList[nextCell.neigh[directionType].r][nextCell.neigh[directionType].c]);
+        // Iterate each direction (EAST will always be the first direction)
+        for(int direction = 0; direction < Maze.NUM_DIR; direction++)
+        {
+
+            // Detect if it should turn with current direction
+            if(shouldTurn(cell, directionHelper.getRelativeDirection(direction)))
+            {
+                Cell relativeCell = cell.neigh[directionHelper.getRelativeDirection(direction)];
+
+                // Mark the list
+                markedList[relativeCell.r][relativeCell.c] = true;
+
+                // Draw the pattern
+                maze.drawFtPrt(relativeCell);
+
+                // Push to the stack
+                stack.push(relativeCell);
+
+                // Reset the relative position if it's turning left or right
+                directionHelper.turnDirection(-direction);
+
+
+            }
+        }
+    }
+
+    private boolean shouldTurn(Cell cell, int direction)
+    {
+        return (cell.neigh[direction] != null
+                && cell.wall[direction] != null
+                && !cell.wall[direction].present
+                && !markedList[cell.neigh[direction].r][cell.neigh[direction].c]);
     }
 
     @Override

@@ -6,6 +6,11 @@ import maze.Wall;
 
 public class SolveHelper
 {
+    /**
+     * If the cell is wrapped by a wall, return true.
+     * @param cell The test cell
+     * @return true if wrapped
+     */
     protected static boolean isWrappedByWall(Cell cell)
     {
         for(Wall wall : cell.wall)
