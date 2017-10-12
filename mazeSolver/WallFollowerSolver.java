@@ -3,6 +3,8 @@ package mazeSolver;
 import maze.Cell;
 import maze.Maze;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -37,7 +39,7 @@ public class WallFollowerSolver implements MazeSolver
         // To make my life easier, I've used a exception to force the wall follower stop when it hits the exit.
         try
         {
-            followWall(maze, maze.entrance);
+            runDfs(maze);
         }
         catch (TraverseHitExitException traverseHitExitException)
         {
@@ -46,59 +48,71 @@ public class WallFollowerSolver implements MazeSolver
     }
 
     /**
+     * Bidirectional DFS runner
+     * No recursion this time as it's more convenient (and faster/smaller JVM stack?).
      *
-     * Wall follower
-     *
-     * @param maze
-     * @param nextCell
+     * @param maze The input maze
      */
-    private void followWall(Maze maze, Cell nextCell) throws TraverseHitExitException
+    private void runDfs(Maze maze) throws TraverseHitExitException
     {
-        // Init, add the first cell to the stack
-        rightStack.push(nextCell);
-        markedList[nextCell.r][nextCell.c] = true;
-        maze.drawFtPrt(nextCell);
+        // Init
+        rightStack.push(maze.entrance);
 
-        while(!rightStack.isEmpty())
+        while(!rightStack.empty())
         {
-            // Grab a cell out
-            Cell nextRightCell = rightStack.pop();
+            // Pop some fresh cells
+            Cell selectedCell = rightStack.pop();
 
-            if(nextRightCell.r == maze.exit.r && nextRightCell.c == maze.exit.c)
+            // Draw the dot
+            maze.drawFtPrt(selectedCell);
+
+            // Stop if matches:
+            if(selectedCell.r == maze.exit.r && selectedCell.c == maze.exit.c)
             {
                 throw new TraverseHitExitException();
             }
 
-            // follow the right wall
-            stackPusher(maze, nextRightCell, rightStack);
+            // Auto add stack for entrance side
+            dfsStackPusher(selectedCell, maze);
+
         }
     }
 
-    private void stackPusher(Maze maze, Cell cell, Stack<Cell> stack)
+    /**
+     *
+     * Bi-DFS stack pusher
+     *
+     * @param targetCell The target cell, will iterate and add its neighbor cell
+     * @param maze The maze
+     */
+    private void dfsStackPusher(Cell targetCell, Maze maze)
     {
-        // Iterate each direction (EAST will always be the first direction)
-        for(int direction = 0; direction < Maze.NUM_DIR; direction++)
+        // Exit side part, ignore if marked
+        if(!markedList[targetCell.r][targetCell.c])
         {
+            // Mark the cell
+            markedList[targetCell.r][targetCell.c] = true;
 
-            // Detect if it should turn with current direction
-            if(shouldTurn(cell, directionHelper.getRelativeDirection(direction)))
+            for(int directionIndex = 0; directionIndex < Maze.NUM_DIR; directionIndex++)
             {
-                Cell relativeCell = cell.neigh[directionHelper.getRelativeDirection(direction)];
+                // Iterate the cell
+                Cell cell = targetCell.neigh[directionIndex];
 
-                // Mark the list
-                markedList[relativeCell.r][relativeCell.c] = true;
+                // Have a look at its right wall and right cell
+                if(shouldTurn(targetCell, directionHelper.getRightDirection()))
+                {
+                    rightStack.push(targetCell.neigh[directionHelper.getRightDirection()]);
+                    directionHelper.updateHeading(directionHelper.getRightDirection());
+                }
 
-                // Draw the pattern
-                maze.drawFtPrt(relativeCell);
-
-                // Push to the stack
-                stack.push(relativeCell);
-
-                // Reset the relative position if it's turning left or right
-                directionHelper.turnDirection(-direction);
-
-
+                if (cell != null && SolveHelper.canGoThru(cell, targetCell))
+                {
+                    rightStack.push(cell);
+                }
             }
+
+            // Increase the counter
+            exploreCounter++;
         }
     }
 

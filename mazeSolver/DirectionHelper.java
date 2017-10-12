@@ -1,6 +1,7 @@
 package mazeSolver;
 
 import maze.Cell;
+import maze.Maze;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,75 +10,67 @@ import java.util.Collections;
 public class DirectionHelper
 {
     private ArrayList<Integer> relativeDirection;
+    private int heading;
     private boolean isHex;
-    private ArrayList<Integer> squareCellOffset;
 
 
     public DirectionHelper(boolean isHex)
     {
-        relativeDirection = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5));
-        squareCellOffset = new ArrayList<>(Arrays.asList(2, 1, 2));
+        if(isHex)
+        {
+            relativeDirection = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5));
+        }
+        else
+        {
+            relativeDirection = new ArrayList<>(Arrays.asList(0, null, 2, 3, null, 5));
+        }
 
         this.isHex = isHex;
+        this.heading = Maze.NORTH;
     }
 
-    /**
-     * Turn CLOCKWISE (EAST), apply the offset with -1
-     *
-     * Meanwhijle, square cells here only have directions with index 0, 2, 3, 5 (E, N, W, S)
-     * so, the offset is -2, -1, -2
-     *
-     */
-    protected void turnEast()
-    {
-        if(isHex)
-        {
-            // REMEMBER TO GET THE NEGATIVE NUMBER HERE!!!
-            Collections.rotate(relativeDirection, -squareCellOffset.get(0));
-            Collections.rotate(squareCellOffset, -1);
-        }
-        else
-        {
-            Collections.rotate(relativeDirection, -1);
-        }
-    }
 
     /**
-     * Turn ANTI-CLOCKWISE (WEST), apply the offset with +1
      *
-     * Meanwhijle, square cells here only have directions with index 0, 2, 3, 5 (E, N, W, S)
-     * so, the offset is +2, +1, +2
+     * Get the right direction.
      *
+     * For example (Square cell)
+     *  Heading: North 2 -> Right side: East 0
+     *  Heading: East 0  -> Right side: South 5
+     *  Heading: South 5 -> Right side: West 3
+     *  Heading: West 3  -> Right side: North 2
+     *
+     * ...actually it just need to get the previous valid element of the array
+     *
+     * @return Direction index
      */
-    protected void turnWest()
+    protected int getRightDirection()
     {
-        if(isHex)
+        int previousElementIndex = relativeDirection.indexOf(heading) - 1;
+
+        if(previousElementIndex < 0)
         {
-            // REMEMBER TO GET THE POSITIVE NUMBER HERE!!!
-            Collections.rotate(relativeDirection, squareCellOffset.get(0));
-            Collections.rotate(squareCellOffset, 1);
+            previousElementIndex = 5;
         }
-        else
+
+        // e.g. 2 -> 0 or 5 -> 3
+        if(relativeDirection.get(previousElementIndex) == null)
         {
-            Collections.rotate(relativeDirection, 1);
+            previousElementIndex -= 1;
         }
+
+        return previousElementIndex;
     }
 
     /**
      *
-     * Negative for clockwise turns, Positive for anti-clockwise turns
+     * Update heading, e.g. Maze.NORTH
      *
-     * @param directionOffset Turning offset
+     * @param headingDirection new heading direction
      */
-    protected void turnDirection(int directionOffset)
+    protected void updateHeading(int headingDirection)
     {
-        Collections.rotate(relativeDirection, directionOffset);
+        this.heading = headingDirection;
     }
-
-    protected int getRelativeDirection(int directionIndex)
-    {
-        return relativeDirection.get(directionIndex);
-    }
-
 
 }
