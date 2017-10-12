@@ -95,15 +95,12 @@ public class WallFollowerSolver implements MazeSolver
 
             for(int directionIndex = 0; directionIndex < Maze.NUM_DIR; directionIndex++)
             {
-                // Iterate the cell
-                Cell cell = targetCell.neigh[directionIndex];
 
-                // Have a look at its right wall and right cell
-                if(shouldTurn(targetCell, directionHelper.getRightDirection()))
-                {
-                    rightStack.push(targetCell.neigh[directionHelper.getRightDirection()]);
-                    directionHelper.updateHeading(directionHelper.getRightDirection());
-                }
+                // Update its heading information to direction helper
+                directionHelper.updateHeading(directionHelper.getRightDirection());
+
+                // Get its "relatively" right cell
+                Cell cell = targetCell.neigh[directionHelper.getRightDirection()];
 
                 if (cell != null && SolveHelper.canGoThru(cell, targetCell))
                 {
