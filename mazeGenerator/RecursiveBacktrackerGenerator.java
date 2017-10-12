@@ -65,7 +65,7 @@ public class RecursiveBacktrackerGenerator implements MazeGenerator
     }
 
     /**
-     * Perform DFS and traverse the whole map from a certain root cell
+     * Perform DFS recursively, traverse the whole map from a certain root cell
      *
      * Includes:
      *  All other steps (Just a DFS, no need to explain...)

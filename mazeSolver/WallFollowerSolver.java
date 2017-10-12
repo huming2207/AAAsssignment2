@@ -36,15 +36,7 @@ public class WallFollowerSolver implements MazeSolver
         directionHelper = new DirectionHelper(maze.type == Maze.HEX);
 
         // Start to follow the wall
-        // To make my life easier, I've used a exception to force the wall follower stop when it hits the exit.
-        try
-        {
-            runDfs(maze);
-        }
-        catch (TraverseHitExitException traverseHitExitException)
-        {
-            solveStatus = true;
-        }
+        runDfs(maze);
     }
 
     /**
@@ -53,10 +45,13 @@ public class WallFollowerSolver implements MazeSolver
      *
      * @param maze The input maze
      */
-    private void runDfs(Maze maze) throws TraverseHitExitException
+    private void runDfs(Maze maze)
     {
-        // Init
+        // Initialization
         rightStack.push(maze.entrance);
+
+        // Increase the counter
+        exploreCounter++;
 
         while(!rightStack.empty())
         {
@@ -69,23 +64,25 @@ public class WallFollowerSolver implements MazeSolver
             // Stop if matches:
             if(selectedCell.r == maze.exit.r && selectedCell.c == maze.exit.c)
             {
-                throw new TraverseHitExitException();
+                break;
             }
 
             // Auto add stack for entrance side
-            dfsStackPusher(selectedCell, maze);
-
+            dfsStackPusher(selectedCell);
         }
+
+        // ...winner winner, chicken dinner!
+        solveStatus = true;
     }
 
     /**
+     * Wall follower stack pusher
      *
-     * Bi-DFS stack pusher
+     * When the
      *
      * @param targetCell The target cell, will iterate and add its neighbor cell
-     * @param maze The maze
      */
-    private void dfsStackPusher(Cell targetCell, Maze maze)
+    private void dfsStackPusher(Cell targetCell)
     {
         // Exit side part, ignore if marked
         if(!markedList[targetCell.r][targetCell.c])
@@ -111,14 +108,6 @@ public class WallFollowerSolver implements MazeSolver
             // Increase the counter
             exploreCounter++;
         }
-    }
-
-    private boolean shouldTurn(Cell cell, int direction)
-    {
-        return (cell.neigh[direction] != null
-                && cell.wall[direction] != null
-                && !cell.wall[direction].present
-                && !markedList[cell.neigh[direction].r][cell.neigh[direction].c]);
     }
 
     @Override

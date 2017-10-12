@@ -53,6 +53,8 @@ public class GrowingTreeGenerator implements MazeGenerator
 
     /**
      *
+     * Growing tree runner recursively
+     *
      * Includes:
      *  1. Pick a random starting cell and add it to set Z (initially Z is empty, after addition it contains just the starting cell).
      *  2.1. Using a particular strategy to select a cell b from Z.
@@ -60,7 +62,7 @@ public class GrowingTreeGenerator implements MazeGenerator
      *  2.3. If b has no unvisited neighbours, remove it from Z.
      *  3. Repeat step 2 until Z is empty
      *
-     * @param rootCell
+     * @param rootCell The root cell
      */
     private void runGrowingTree(Cell rootCell, boolean[][] markedList)
     {

@@ -23,7 +23,7 @@ public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
     public BiDirectionalRecursiveBacktrackerSolver()
     {
         // Mark the status
-        solveStatus = true;
+        solveStatus = false;
 
         // Set the counter to 0
         exploreCounter = 0;
@@ -45,14 +45,9 @@ public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
         entranceMarkedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
         exitMarkedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
 
-        try
-        {
-            runBiDfs(maze);
-        }
-        catch (TraverseHitExitException exception)
-        {
-            solveStatus = true;
-        }
+        // Fire in the hole!
+        runBiDfs(maze);
+
     }
 
     /**
@@ -61,9 +56,9 @@ public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
      *
      * @param maze The input maze
      */
-    private void runBiDfs(Maze maze) throws TraverseHitExitException
+    private void runBiDfs(Maze maze)
     {
-        // Init
+        // Initialization
         entranceStack.push(maze.entrance);
         exitStack.push(maze.exit);
 
@@ -80,7 +75,7 @@ public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
                     || exitMarkedList[entranceCell.r][entranceCell.c]
                     || entranceMarkedList[exitCell.r][exitCell.c])
             {
-                throw new TraverseHitExitException();
+                break;
             }
 
             // Auto add stack for entrance side
@@ -89,6 +84,9 @@ public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
             // Auto add stack for exit side
             dfsStackPusher(exitCell, exitStack, exitMarkedList, maze);
         }
+
+        // ...winner winner, chicken dinner!
+        solveStatus = true;
     }
 
     /**

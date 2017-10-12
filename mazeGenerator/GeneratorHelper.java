@@ -48,8 +48,8 @@ public class GeneratorHelper
     /**
      * Detect if two cells are neighbors
      *
-     * @param cell
-     * @param neighborCell
+     * @param cell A certain cell
+     * @param neighborCell A possible neighbor cell
      * @return true if two cells are neighbors
      */
     protected static boolean isNeighbor(Cell cell, Cell neighborCell)
@@ -170,7 +170,7 @@ public class GeneratorHelper
 
     /**
      * Pick the last cell (i.e. the latest cell) from a set
-     * @param set
+     * @param set A certain set
      * @return
      */
     protected static Cell pickLastCellFromSet(HashSet<Cell> set)
@@ -192,8 +192,10 @@ public class GeneratorHelper
      *  Step 1. Run BFS traverse
      *  Step 2. When a non-null, not marked tunnel
      *
+     * I know I can just write a config file reader to read the file (and it should be faster if I did)...
+     * But I just want to practise using BFS lol
      *
-     * @param maze
+     * @param maze A certain maze
      * @return
      */
     protected static ArrayList<int[]> collectAllTunnelPositions(Maze maze)
