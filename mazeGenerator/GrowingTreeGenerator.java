@@ -5,8 +5,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import maze.Maze;
 import maze.Cell;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+/**
+ * Modified Growing Tree Generator
+ *
+ * @author Ming Hu s3554025
+ */
 public class GrowingTreeGenerator implements MazeGenerator
 {
     // Growing tree maze generator. As it is very general,

@@ -2,12 +2,15 @@ package mazeGenerator;
 
 import maze.Cell;
 import maze.Maze;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Recursive Backtrack (Random DFS?) Generator
+ *
+ * @author Ming Hu s3554025
+ */
 public class RecursiveBacktrackerGenerator implements MazeGenerator
 {
 

@@ -9,6 +9,9 @@ import java.util.Stack;
 
 /**
  * Implements the BiDirectional recursive backtracking maze solving algorithm.
+ *
+ * @author Ming Hu s3554025
+ * @author Yuxuan Cheng s3516930
  */
 public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver
 {

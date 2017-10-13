@@ -2,13 +2,16 @@ package mazeGenerator;
 
 import maze.Cell;
 import maze.Maze;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Collections;
-import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Modified Prim's Generator
+ *
+ * @author Ming Hu s3554025
+ */
 public class ModifiedPrimsGenerator implements MazeGenerator
 {
 

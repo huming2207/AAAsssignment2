@@ -1,11 +1,9 @@
 package mazeSolver;
 
-import maze.Cell;
 import maze.Maze;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class DirectionHelper
 {

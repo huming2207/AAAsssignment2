@@ -3,14 +3,14 @@ package mazeSolver;
 import maze.Cell;
 import maze.Maze;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Stack;
 
 /**
  * Implements WallFollowerSolver
+ *
+ * @author Ming Hu s3554025
+ * @author Yuxuan Cheng s3516930
  */
-
 public class WallFollowerSolver implements MazeSolver
 {
     private boolean[][] markedList;
