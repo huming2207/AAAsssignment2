@@ -37,6 +37,7 @@ public class GrowingTreeGenerator implements MazeGenerator
         // Declare a DFS marked list and marked the initial values as false.
         boolean[][] markedList = new boolean[maze.sizeR][maze.sizeC + (maze.sizeR + 1) / 2];
 
+        // Here we go...
         runGrowingTree(GeneratorHelper.getRandomCellFromMaze(maze),markedList);
 
         // Use the original isPerfect() method to detect if this maze is perfect

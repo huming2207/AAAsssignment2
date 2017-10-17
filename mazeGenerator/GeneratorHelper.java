@@ -88,43 +88,11 @@ public class GeneratorHelper
      */
     protected static Cell getRandomCellFromMaze(Maze maze)
     {
-        int randomPosX, randomPosY;
-
-        // Detect the maze type
-        switch(maze.type)
-        {
-            case Maze.NORMAL:
-            {
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-
-            case Maze.TUNNEL:
-            {
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-
-            case Maze.HEX:
-            {
-                // Randomly pick a Cell from the maze map.
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC + (maze.sizeR + 1) / 2);
-                break;
-            }
-
-            // Won't happen, just shut up the compiler
-            default:
-            {
-                randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
-                randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC);
-                break;
-            }
-        }
+        // Declare the random cell positions
+        // Since the hex maze has a wider Y axis, here we need to follow the assignment spec to declare a wider one.
+        // It should also support the normal mazes btw.
+        int randomPosX = ThreadLocalRandom.current().nextInt(0, maze.sizeR);
+        int randomPosY = ThreadLocalRandom.current().nextInt(0, maze.sizeC + (maze.sizeR + 1) / 2);
 
         // Pick a cell with the random index from the map
         Cell randomCell = maze.map[randomPosX][randomPosY];
